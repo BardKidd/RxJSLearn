@@ -23,6 +23,23 @@ import {
   forkJoin,
   scan,
   pairwise,
+  switchMap,
+  concatMap,
+  mergeMap,
+  exhaustMap,
+  Subject,
+  switchAll,
+  tap,
+  concatAll,
+  mergeAll,
+  combineLatestAll,
+  filter,
+  first,
+  last,
+  single,
+  takeLast,
+  takeUntil,
+  takeWhile,
 } from "rxjs";
 import { ajax } from "rxjs/ajax";
 
@@ -211,44 +228,44 @@ import { ajax } from "rxjs/ajax";
 // A2
 // A3
 
-const studentScore = [
-  {
-    name: "小名",
-    project: "國文",
-    score: 60,
-    isPass: true,
-  },
-  {
-    name: "小華",
-    project: "國文",
-    score: 50,
-    isPass: false,
-  },
-  {
-    name: "小量",
-    project: "國文",
-    score: 10,
-    isPass: false,
-  },
-];
-const changeScore$ = from(studentScore).pipe(
-  map((data) => ({
-    ...data,
-    score: Math.floor(Math.sqrt(data.score) * 10),
-  })),
-  map((data) => ({
-    ...data,
-    isPass: data.score >= 60 ? true : false,
-  }))
-);
+// const studentScore = [
+//   {
+//     name: "小名",
+//     project: "國文",
+//     score: 60,
+//     isPass: true,
+//   },
+//   {
+//     name: "小華",
+//     project: "國文",
+//     score: 50,
+//     isPass: false,
+//   },
+//   {
+//     name: "小量",
+//     project: "國文",
+//     score: 10,
+//     isPass: false,
+//   },
+// ];
+// const changeScore$ = from(studentScore).pipe(
+//   map((data) => ({
+//     ...data,
+//     score: Math.floor(Math.sqrt(data.score) * 10),
+//   })),
+//   map((data) => ({
+//     ...data,
+//     isPass: data.score >= 60 ? true : false,
+//   }))
+// );
 
-const [pass$, fail$] = partition(changeScore$, (data) => data.score >= 60);
-pass$.subscribe((data) =>
-  console.log(`${data.name}${data.project}${data.score}及格`)
-);
-fail$.subscribe((data) =>
-  console.log(`${data.name}${data.project}${data.score}不及格`)
-);
+// const [pass$, fail$] = partition(changeScore$, (data) => data.score >= 60);
+// pass$.subscribe((data) =>
+//   console.log(`${data.name}${data.project}${data.score}及格`)
+// );
+// fail$.subscribe((data) =>
+//   console.log(`${data.name}${data.project}${data.score}不及格`)
+// );
 
 // const total$ = from(studentScore).pipe(
 //   scan((acc: any, value: any) => {
@@ -309,6 +326,98 @@ fail$.subscribe((data) =>
 //   console.log(`狀態: ${data.isRise}`);
 //   console.log(`至今為止有${data.priceBelowBase}天的價格低於目標價`);
 // });
+
+// interval(3000)
+//   .pipe(switchMap(() => timer(0, 1000)))
+//   .subscribe((data) => console.log(data));
+
+// const click$ = fromEvent(document, "click");
+// const stream2$ = interval(1000).pipe(take(5));
+// const result = click$
+//   .pipe(concatMap(() => stream2$))
+//   .subscribe((data) => console.log(data));
+
+// const stream1$ = timer(0, 3000);
+// const getStream1$ = (streamNum: number) =>
+//   timer(0, 1000).pipe(map((data) => `資料流${streamNum}目前為: ${data}`));
+
+// stream1$
+//   .pipe(mergeMap((data) => getStream1$(data)))
+//   .subscribe((data) => console.log(data));
+
+// const clicks = fromEvent(document, "click");
+// const result = clicks.pipe(exhaustMap(() => interval(1000).pipe(take(5))));
+// result.subscribe((x) => console.log(x));
+
+// const generateStream = (index: any) =>
+//   timer(0, 1000).pipe(
+//     map((data) => `資料流${index}目前值為: ${data}`),
+//     take(3)
+//   );
+// const source$ = new Subject();
+// const stream$ = source$.pipe(map((index) => generateStream(index)));
+// stream$.pipe(switchAll()).subscribe((result) => console.log(result));
+
+// source$.next(1);
+
+// const click$ = fromEvent(document, "click");
+// const source$ = click$.pipe(map(() => interval(1000)));
+
+// source$.pipe(switchAll()).subscribe((x) => console.log(x));
+
+// const click$ = fromEvent(document, "click");
+// const stream$ = click$.pipe(map(() => interval(1000).pipe(take(5))));
+// stream$.pipe(concatAll()).subscribe((x) => console.log(x));
+
+// const click$ = fromEvent(document, "click");
+// const result$ = click$.pipe(map(() => interval(1000).pipe(take(5))));
+// result$.pipe(mergeAll()).subscribe((x) => console.log(x));
+
+// const click$ = fromEvent(document, "click");
+// const higherOrder$ = click$.pipe(
+//   map(() => interval(1000).pipe(take(3))),
+//   take(2)
+// );
+// higherOrder$.pipe(combineLatestAll()).subscribe((x) => console.log(x));
+
+// const source$ = timer(0, 1000).pipe(take(10));
+// source$
+//   .pipe(filter((data) => data > 3))
+//   .subscribe((data) => console.log("比3大的數字", data));
+
+// const source$ = timer(0, 1000).pipe(take(10));
+
+// source$.pipe(first()).subscribe((x) => console.log(x));
+
+// const source$ = timer(0, 1000).pipe(take(10));
+
+// source$.pipe(last((data) => data < 11)).subscribe((x) => console.log(x));
+
+// const source$ = timer(0, 1000).pipe(single());
+
+// source$.subscribe((x) => console.log(x));
+
+// range(1, 10)
+//   .pipe(takeLast(3))
+//   .subscribe((x) => console.log(x));
+
+// const click$ = fromEvent(document, "click");
+// const source$ = interval(1000)
+//   .pipe(
+//     map((data) => data + 1),
+//     takeUntil(click$)
+//   )
+//   .subscribe({
+//     next: (data) => console.log("現在值為", data),
+//     complete: () => console.log("結束"),
+//   });
+
+const source$ = interval(1000).pipe(map((data) => data + 1));
+
+source$.pipe(takeWhile((data) => data < 5, true)).subscribe({
+  next: (data) => console.log("目前值", data),
+  complete: () => console.log("結束"),
+});
 
 //   {
 //   next: (data: any) => {
