@@ -40,6 +40,10 @@ import {
   takeLast,
   takeUntil,
   takeWhile,
+  skip,
+  skipLast,
+  skipUntil,
+  skipWhile,
 } from "rxjs";
 import { ajax } from "rxjs/ajax";
 
@@ -47,23 +51,6 @@ import { ajax } from "rxjs/ajax";
 //   complete: () => {
 //     console.log("これで終わりだ！");
 //   },
-// });
-
-// const arr = of("one", "two", "three", "four", "five", "six");
-
-// arr.subscribe((x) => console.log(`我今天要跟 ${x} 個妹子同時 sex!`));
-
-// range(1, 10).subscribe((x) => console.log(`第${x}次說榛名我老婆`));
-
-// const emitOneIfEven = (data: number) => {
-//   return iif(() => data % 2 === 0, of("Hello"), EMPTY);
-// };
-// emitOneIfEven(1).subscribe((data) => {
-//   console.log(`${data}`);
-// });
-
-// emitOneIfEven(2).subscribe((data) => {
-//   console.log(`${data}, 志摩凜`);
 // });
 
 // const arr = ["one", "two", "three"];
@@ -412,12 +399,29 @@ import { ajax } from "rxjs/ajax";
 //     complete: () => console.log("結束"),
 //   });
 
-const source$ = interval(1000).pipe(map((data) => data + 1));
+// const source$ = interval(1000).pipe(map((data) => data + 1));
 
-source$.pipe(takeWhile((data) => data < 5, true)).subscribe({
-  next: (data) => console.log("目前值", data),
-  complete: () => console.log("結束"),
-});
+// source$.pipe(takeWhile((data) => data < 5, true)).subscribe({
+//   next: (data) => console.log("目前值", data),
+//   complete: () => console.log("結束"),
+// });
+
+// const source$ = interval(1000)
+//   .pipe(skip(3), take(3))
+//   .subscribe((data) => console.log(data));
+
+// interval(1000)
+//   .pipe(skipLast(9))
+//   .subscribe((data) => console.log(data));
+
+// const click$ = fromEvent(document, "click");
+// const source$ = interval(1000);
+
+// source$.pipe(skipUntil(click$)).subscribe((data) => console.log(data));
+
+// interval(1000)
+//   .pipe(skipWhile((data) => data < 5))
+//   .subscribe((data) => console.log(data));
 
 //   {
 //   next: (data: any) => {
