@@ -44,6 +44,9 @@ import {
   skipLast,
   skipUntil,
   skipWhile,
+  distinct,
+  distinctUntilChanged,
+  distinctUntilKeyChanged,
 } from "rxjs";
 import { ajax } from "rxjs/ajax";
 
@@ -421,6 +424,60 @@ import { ajax } from "rxjs/ajax";
 
 // interval(1000)
 //   .pipe(skipWhile((data) => data < 5))
+//   .subscribe((data) => console.log(data));
+
+// from([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2])
+//   .pipe(distinct())
+//   .subscribe((data) => console.log(data));
+
+// const students = [
+//   { id: 1, score: 70 },
+//   { id: 2, score: 80 },
+//   { id: 3, score: 90 },
+//   { id: 1, score: 100 },
+//   { id: 2, score: 100 },
+// ];
+// from(students)
+//   .pipe(distinct((student) => student.id))
+//   .subscribe((data) => console.log(data));
+
+// const source$ = new Subject<{ id: number; score: number }>();
+// const sourceFlushes$ = new Subject();
+
+// source$
+//   .pipe(distinct((students) => students.id, sourceFlushes$))
+//   .subscribe((data) => console.log(data));
+
+// setTimeout(() => source$.next({ id: 1, score: 70 }), 1000);
+// setTimeout(() => source$.next({ id: 2, score: 70 }), 2000);
+// setTimeout(() => source$.next({ id: 3, score: 70 }), 3000);
+// setTimeout(() => source$.next({ id: 1, score: 70 }), 4000);
+// setTimeout(() => sourceFlushes$.next(() => console.log("清空資料")), 4500);
+// setTimeout(() => source$.next({ id: 1, score: 70 }), 5000);
+
+// from([1, 1, 2, 3, 3, 1])
+//   .pipe(distinctUntilChanged())
+//   .subscribe((data) => {
+//     console.log(data);
+//   });
+
+// const students = [
+//   { id: 1, score: 70 },
+//   { id: 1, score: 80 },
+//   { id: 1, score: 80 },
+//   { id: 2, score: 90 },
+//   { id: 2, score: 90 },
+//   { id: 3, score: 100 },
+// ];
+
+// from(students)
+//   .pipe(
+//     distinctUntilChanged((studentA, studentB) => studentA.id === studentB.id)
+//   )
+//   .subscribe((data) => console.log(data));
+
+// from(students)
+//   .pipe(distinctUntilKeyChanged("id"))
 //   .subscribe((data) => console.log(data));
 
 //   {
