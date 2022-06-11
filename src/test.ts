@@ -47,6 +47,15 @@ import {
   distinct,
   distinctUntilChanged,
   distinctUntilKeyChanged,
+  sampleTime,
+  sample,
+  auditTime,
+  audit,
+  isEmpty,
+  defaultIfEmpty,
+  find,
+  findIndex,
+  every,
 } from "rxjs";
 import { ajax } from "rxjs/ajax";
 
@@ -470,6 +479,28 @@ import { ajax } from "rxjs/ajax";
 //   { id: 3, score: 100 },
 // ];
 
+// const source$ = interval(1000);
+// const click$ = fromEvent(document, "click");
+// const result$ = source$.pipe(sample(click$));
+// result$.subscribe((data) => console.log(`我自己決定${data}`));
+
+// interval(1000)
+//   .pipe(sampleTime(1500))
+//   .subscribe((data) => console.log("sampleTime", data));
+
+// interval(1000)
+//   .pipe(auditTime(1500))
+//   .subscribe((data) => console.log("auditTime", data));
+
+// const source$ = new Subject();
+// source$.pipe(sampleTime(1500)).subscribe((data) => {
+//   console.log("目前 i 為", data);
+// });
+// let i = 0;
+// setInterval(() => {
+//   i = ++i;
+//   source$.next(i);
+// }, 500);
 // from(students)
 //   .pipe(
 //     distinctUntilChanged((studentA, studentB) => studentA.id === studentB.id)
@@ -480,6 +511,68 @@ import { ajax } from "rxjs/ajax";
 //   .pipe(distinctUntilKeyChanged("id"))
 //   .subscribe((data) => console.log(data));
 
+// const source$ = interval(1000);
+// const durationSelector = (num: number) => interval(num);
+// source$.pipe(audit(durationSelector)).subscribe((data) => console.log(data));
+
+// interval(1000)
+//   .pipe(take(3), isEmpty())
+//   .subscribe((data) => console.log(data));
+
+// const source$ = new Subject();
+// source$.pipe(defaultIfEmpty("預設值")).subscribe({
+//   next: (data) => console.log(data),
+//   complete: () => console.log("結束"),
+// });
+// setTimeout(() => source$.complete());
+
+// interval(1000)
+//   .pipe(find((data) => data === 3))
+//   .subscribe((data) => console.log(data));
+
+// interval(1000)
+//   .pipe(
+//     map((data) => data * 2),
+//     findIndex((data) => data === 6)
+//   )
+//   .subscribe((data) => console.log(data));
+
+// interval(1000)
+//   .pipe(
+//     map((data) => data),
+//     take(10)
+//   )
+//   .pipe(every((data) => data % 2 === 0))
+//   .subscribe((data) => console.log(data));
+// const source$ = (index) => pipe(map(time => console.log(time)));
+const source = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+// interval(1000)
+//   .pipe(
+//     mergeMap((data) => {
+//       return concat(
+//         of("Loading 開始"),
+
+//       );
+//     })
+//   )
+//   .subscribe((data) => console.log(data));
+from(source)
+  .pipe(
+    mergeMap((response) => {
+      if (response > 3) {
+        throw "出現錯誤!!!";
+      }
+      return concat(
+        of("Loading 開始"),
+        of(`response: { data: ${response} }`),
+        of("Loading 結束")
+      );
+    }),
+    catchError((error) => {
+      return concat(of("Loading 強制結束"), of(error));
+    })
+  )
+  .subscribe((x) => console.log(x));
 //   {
 //   next: (data: any) => {
 //     console.log(data);
